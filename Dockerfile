@@ -14,6 +14,7 @@ ENV TERM linux
 # Airflow
 ARG AIRFLOW_VERSION=1.9.0
 ARG AIRFLOW_HOME=/usr/local/airflow
+ARG AIRFLOW_PLUGINS=/usr/local/airflow/plugins
 
 # Define en_US.
 ENV LANGUAGE en_US.UTF-8
@@ -68,10 +69,14 @@ RUN set -ex \
         /usr/share/doc \
         /usr/share/doc-base
 
+RUN mkdir ${AIRFLOW_PLUGINS}
+
 COPY script/entrypoint.sh /entrypoint.sh
-COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
+#COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
+COPY plugins/airflow-rest-api-plugin-1.0.4/plugins/ ${AIRFLOW_PLUGINS}
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
+
 
 EXPOSE 8080 5555 8793
 
